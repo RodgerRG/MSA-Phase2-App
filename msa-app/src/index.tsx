@@ -5,11 +5,16 @@ import App from './App';
 import Login from './Login';
 import Home from './Home';
 import * as serviceWorker from './serviceWorker';
+import {createStore} from 'redux';
+import reducers from './reducers/appstore';
+import {Provider} from 'react-redux';
+
+const store = createStore(reducers);
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Login />
-  </React.StrictMode>,
+  <Provider store={store}>
+    <Home />
+  </Provider>,
   document.getElementById('root')
 );
 

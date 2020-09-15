@@ -7,6 +7,7 @@ import { render } from '@testing-library/react';
 import { register } from './serviceWorker';
 import { FormControlProps } from 'react-bootstrap/esm/FormControl';
 import { RequestOptions } from 'https';
+import ReactDOM from 'react-dom';
 
 type Props = {
 
@@ -73,6 +74,10 @@ class Login extends React.Component<Props, State> {
 
                 if(response.status == 200) {
                     //Navigation goes here, navigate to the next page (which currently doesn't exist. eep.)
+                    ReactDOM.render(<React.StrictMode>
+                        <Login />
+                      </React.StrictMode>,
+                      document.getElementById('root'));
                 } else {
                     //TODO:// render a login failed message here. Either way, error handling is good
                     console.log("bad login")
