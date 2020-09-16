@@ -1,6 +1,6 @@
 import React from 'react';
 import Redux, { Action, combineReducers } from 'redux';
-import {LOGIN, LoginActionType, SIGNUP_USER, RenderPostType, FETCH_POST} from '../actions/types';
+import {LOGIN, LoginActionType, SIGNUP_USER, RenderPostType, FETCH_POST, CacheIdActionType, CACHE_ID} from '../actions/types';
 import { useHistory, useLocation } from 'react-router';
 
 const initialLogin = {
@@ -46,7 +46,23 @@ function postReducer (state = initialPost, action : RenderPostType) {
     }
 }
 
+const initialId = {
+    userId: 0
+};
+
+function idReducer (state = initialId, action : CacheIdActionType) {
+    switch(action.type) {
+        case CACHE_ID:
+            return {
+                userId: action.payload
+            }
+        default :
+            return state
+    }
+}
+
 export default combineReducers({
     loginReducer,
-    postReducer
+    postReducer,
+    idReducer
 })

@@ -5,6 +5,8 @@ interface LoginUpdate {
     payload: boolean
 }
 
+export type LoginActionType = LoginUpdate
+
 interface RenderPost {
     type : typeof FETCH_POST,
     payload: {
@@ -17,9 +19,18 @@ interface RenderPost {
     }
 }
 
-export type LoginActionType = LoginUpdate
+
 export type RenderPostType = RenderPost
 
 export const SIGNUP_USER = "SIGNUP_USER"
 export const CREATE_POST = "CREATE_POST"
 export const FETCH_POST = "FETCH_POST"
+
+export const CACHE_ID = "CACHE_ID"
+
+interface IdUpdate {
+    type : typeof CACHE_ID,
+    payload : number
+}
+
+export type CacheIdActionType = IdUpdate

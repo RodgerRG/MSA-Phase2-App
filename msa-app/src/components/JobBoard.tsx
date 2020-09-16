@@ -6,6 +6,8 @@ import { parentPort } from 'worker_threads';
 import { renderPosting } from '../actions/postingActions';
 import JobPosting from './JobPosting';
 import TopNav from './TopNav';
+import { Col } from 'react-bootstrap';
+import SideNav from './SideNav';
 
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
@@ -41,7 +43,7 @@ class Dashboard extends React.Component<Props, State> {
     }
 
     componentDidMount() {
-       this.createHubConnection();
+      // this.createHubConnection();
     }
 
     createBoard() {
@@ -78,7 +80,7 @@ class Dashboard extends React.Component<Props, State> {
 
     async createHubConnection() {
         const connection = new HubConnectionBuilder()
-                .withUrl("https://localhost:44380/hub")
+                .withUrl("https://phase2-api.azurewebsites.net/hub")
                 .configureLogging(LogLevel.Information)
                 .withAutomaticReconnect()
                 .build();
@@ -100,9 +102,16 @@ class Dashboard extends React.Component<Props, State> {
 
         } as CSSProperties;
 
+        const navStyle = {
+            left: '-0.8vw'
+        } as CSSProperties;
+
         return (
             <div style={baseStyle}>
                 <TopNav />
+                <Col xs={3} style={navStyle}>
+                    <SideNav/>
+                </Col>
                 {this.createBoard}
             </div>
         );

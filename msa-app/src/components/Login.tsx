@@ -11,7 +11,7 @@ import ReactDOM from 'react-dom';
 import {connect, ConnectedProps, useDispatch} from 'react-redux';
 import { LOGIN, SIGNUP_USER } from '../actions/types';
 import { useHistory, useLocation } from 'react-router-dom';
-import {login} from '../actions/loginActions';
+import {login, updateID} from '../actions/loginActions';
 import { Dispatch } from 'redux';
 import history from './history';
 
@@ -44,7 +44,8 @@ class Login extends React.Component<Props, State> {
             firstName : "",
             lastName: "",
             confirmPass: "",
-            isValidated : true
+            isValidated : true,
+            userId : 0
             }
 
         //
@@ -76,12 +77,15 @@ class Login extends React.Component<Props, State> {
         } as RequestInit;
 
         fetch("https://phase2-api.azurewebsites.net/api/User/login", loginRequestOptions)
-            .then(response => {
+            .then(async response => {
                 if(response.status == 200) {
+                    var Id : string = await response.text();
                     this.setState({
-                        isAuthenticated: true
+                        isAuthenticated: true,
+                        userId: parseInt(Id)
                     });
                     this.props.onLogin();
+                    this.props.cacheUserId(parseInt(Id));
                     history.push('/home')
                 } else {
                     //TODO:// render a login failed message here. Either way, error handling is good
@@ -247,19 +251,17 @@ class Login extends React.Component<Props, State> {
     
         const formGroupStyle = {
             paddingLeft: "14%",
-            paddingTop: "1vh",
             alignItems: "center",
             position: "relative",
         } as React.CSSProperties;
     
         const formLabelStyle = {
             fontSize: "1vw",
-            paddingBottom: ".5vh",
         } as React.CSSProperties;
     
         const formControlStyle = {
             width: "80%",
-            fontSize: "1vw",
+            fontSize: "0.7vw",
             textAlign: "center"
         } as React.CSSProperties;
     
@@ -278,7 +280,7 @@ class Login extends React.Component<Props, State> {
         const formTextStyle = {
             position: "relative",
             paddingLeft: "22%",
-            fontSize: "0.7vw"
+            fontSize: "0.7vw",
         } as React.CSSProperties;
 
         const loginForm = (   
@@ -289,7 +291,7 @@ class Login extends React.Component<Props, State> {
             position: "relative",
             backgroundColor: "#2C3539"
         }}>
-            <img src="https://cdn.auth0.com/blog/react-js/react.png" style={{height: "80%", width: "80%", paddingLeft: "10%"}}></img>
+            <img src="https://cdn.auth0.com/blog/react-js/react.png" style={{height: "80%", width: "80%", paddingLeft: "20%"}}></img>
             <Form style={formstyle} noValidate onSubmit={this.login}>
             <Form.Group controlId="Username" style = {formGroupStyle}>
                 <Form.Label style = {formLabelStyle}>Username:</Form.Label>
@@ -376,16 +378,19 @@ class Login extends React.Component<Props, State> {
 }
 
 interface RootState {
-    isAuthenticated : boolean
+    isAuthenticated : boolean,
+    userId : number
   }
   
   const mapStateToProps = (state : RootState) => ({
-    isAuthenticated : state.isAuthenticated
+    isAuthenticated : state.isAuthenticated,
+    userId : state.userId
   });
   
   const mapDispatchToProps = (dispatch: Dispatch) => {
     return {
-      onLogin: () => dispatch(login(true))
+      onLogin: () => dispatch(login(true)),
+      cacheUserId: (id : number) => dispatch(updateID(id))
     }
   }
   

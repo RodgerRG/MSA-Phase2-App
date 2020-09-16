@@ -20,24 +20,42 @@ class App extends React.Component<Props, State> {
   constructor(props : Props) {
     super(props);
     this.state = {
-        headerColor : '#BF94E4'
+        homeColor : '#BF94E4',
+        boardColor : '#BF94E4'
     }
 
-    this.hoverLight = this.hoverLight.bind(this);
-    this.hoverDark = this.hoverDark.bind(this);
+    this.hoverLightHome = this.hoverLightHome.bind(this);
+    this.hoverDarkHome = this.hoverDarkHome.bind(this);
+    this.hoverLightBoard = this.hoverLightBoard.bind(this);
+    this.hoverDarkBoard = this.hoverDarkBoard.bind(this);
   }
 
-  hoverLight(event : MouseEvent) {
+  //Cut me a break here, there's no such thing as :hover for React =.=*
+  hoverLightHome(event : MouseEvent) {
     event.preventDefault();
     this.setState({
-        headerColor: '#EFDFFF'
+        homeColor: '#EFDFFF'
     })
   }
 
-  hoverDark(event : MouseEvent) {
+  hoverDarkHome(event : MouseEvent) {
     event.preventDefault();
     this.setState({
-        headerColor: '#BF94E4'
+        homeColor: '#BF94E4'
+    })
+  }
+
+  hoverLightBoard(event : MouseEvent) {
+    event.preventDefault();
+    this.setState({
+        boardColor: '#EFDFFF'
+    })
+  }
+
+  hoverDarkBoard(event : MouseEvent) {
+    event.preventDefault();
+    this.setState({
+        boardColor: '#BF94E4'
     })
   }
 
@@ -51,21 +69,27 @@ class App extends React.Component<Props, State> {
         position: 'relative',
         borderWidth: '0.1vw',
         fontSize: '2vw',
-        fontFamily: 'MS Comic Sans',
+        fontFamily: 'Comic Sans MS',
         paddingRight: '1vw',
-        top: '-3.5vh',
         textDecoration: 'none'
     } as CSSProperties;
 
-    const homeStyle = {
+    const imageStyle = {
         height: '4vw',
         width: '4vw',
         padding: '1vh'
     } as CSSProperties;
 
-    const textStyle = {
+    const homeStyle = {
         backgroundColor: '#2C3539',
-        color: this.state.headerColor,
+        color: this.state.homeColor,
+        fontStyle: 'normal',
+        textDecoration: 'none'
+    } as CSSProperties;
+
+    const boardsStyle = {
+        backgroundColor: '#2C3539',
+        color: this.state.boardColor,
         fontStyle: 'normal',
         textDecoration: 'none'
     } as CSSProperties;
@@ -73,13 +97,13 @@ class App extends React.Component<Props, State> {
     return(
         <Navbar style = {baseStyle}>
             <Navbar.Brand>
-                <img src="https://cdn.auth0.com/blog/react-js/react.png" style={homeStyle}></img>
+                <img src="https://cdn.auth0.com/blog/react-js/react.png" style={imageStyle}></img>
             </Navbar.Brand>
-            <Nav.Link style={rowStyle} onMouseEnter={this.hoverLight} onMouseLeave={this.hoverDark}>
-                <Link to="/home" style={textStyle}>Home</Link>
+            <Nav.Link style={rowStyle} onMouseEnter={this.hoverLightHome} onMouseLeave={this.hoverDarkHome}>
+                <Link to="/home" style={homeStyle}>Home</Link>
             </Nav.Link>
-            <Nav.Link style={rowStyle}>
-                <Link to="/boards" style={textStyle}>Boards</Link>
+            <Nav.Link style={rowStyle} onMouseEnter={this.hoverLightBoard} onMouseLeave={this.hoverDarkBoard}>
+                <Link to="/boards" style={boardsStyle}>Boards</Link>
             </Nav.Link>
         </Navbar>
     );
@@ -92,7 +116,8 @@ interface RootState {
 }
 
 type State = RootState & {
-    headerColor : string
+    homeColor : string,
+    boardColor : string
 }
 
 const mapStateToProps = (state : RootState) => ({
