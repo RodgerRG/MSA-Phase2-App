@@ -1,30 +1,40 @@
 import React, { ReactPropTypes, Component } from 'react';
 import Login from './Login';
 import { Provider, connect, useDispatch, ConnectedProps } from 'react-redux';
-import {Redirect, BrowserRouter as Router, Route} from 'react-router-dom';
+import {Redirect, Router, Route, Switch} from 'react-router-dom';
 import { Store, AnyAction, createStore } from 'redux';
 import App from './App';
-import { LOGIN, SIGNUP_USER } from './actions/types';
+import { LOGIN, SIGNUP_USER } from '../actions/types';
+import {login} from '../actions/loginActions';
+import history from './history';
+import Dashboard from './JobBoard';
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type Props = PropsFromRedux & {
+  isAuthenticated: boolean
 }
 
-class Home extends React.Component<Props> {
+class Home extends React.Component<Props, RootState> {
   
   constructor(props : Props) {
     super(props);
     this.state = {
-      isAuthenticated: false,
+      isAuthenticated: this.props.isAuthenticated,
     }
     //bind the methods contained within to the class
   }
 
   render() {
     return(
-      <Router>
-        <Route path="/:filter?" render = {() => this.props.isAuthenticated ? App : (
+      <Router history={history}>
+          <Route path="/" render = {() => this.state.isAuthenticated ? (
+            <Redirect
+            to={{
+              pathname: "/home"
+            }}
+          />
+        ) : (
           <Redirect
             to={{
               pathname: "/login"
@@ -32,6 +42,8 @@ class Home extends React.Component<Props> {
           />
         )} />
         <Route path="/login" component = {Login} />
+        <Route path="/home" component = {App} />
+        <Route path="/boards" component = {Dashboard} />
       </Router>
     );
   }
@@ -45,15 +57,6 @@ const mapStateToProps = (state : RootState) => ({
   isAuthenticated : state.isAuthenticated
 });
 
-const mapDispatchToProps = () => {
-  return {
-    login : (flag : boolean) => ({
-      type: LOGIN,
-      payload: flag
-    })
-  }
-}
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect(mapStateToProps);
 
 export default connector(Home);

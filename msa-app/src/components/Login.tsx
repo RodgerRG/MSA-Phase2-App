@@ -4,16 +4,24 @@ import Form, { FormProps } from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { relative } from 'path';
 import { render } from '@testing-library/react';
-import { register } from './serviceWorker';
+import { register } from '../serviceWorker';
 import { FormControlProps } from 'react-bootstrap/esm/FormControl';
 import { RequestOptions } from 'https';
 import ReactDOM from 'react-dom';
+import {connect, ConnectedProps, useDispatch} from 'react-redux';
+import { LOGIN, SIGNUP_USER } from '../actions/types';
+import { useHistory, useLocation } from 'react-router-dom';
+import {login} from '../actions/loginActions';
+import { Dispatch } from 'redux';
+import history from './history';
 
-type Props = {
+type PropsFromRedux = ConnectedProps<typeof connector>;
 
-};
+type Props = PropsFromRedux & {
 
-type State = {
+}
+
+type State = RootState & {
     toggleForm : boolean;
     username : string;
     password : string;
@@ -28,6 +36,7 @@ class Login extends React.Component<Props, State> {
     constructor(props : Props) {
         super(props);
         this.state = {
+            isAuthenticated: false,
             toggleForm: true,
             username: "",
             password: "",
@@ -68,16 +77,12 @@ class Login extends React.Component<Props, State> {
 
         fetch("https://phase2-api.azurewebsites.net/api/User/login", loginRequestOptions)
             .then(response => {
-                response.headers.forEach(element => {
-                    console.log(element);
-                });
-
                 if(response.status == 200) {
-                    //Navigation goes here, navigate to the next page (which currently doesn't exist. eep.)
-                    ReactDOM.render(<React.StrictMode>
-                        <Login />
-                      </React.StrictMode>,
-                      document.getElementById('root'));
+                    this.setState({
+                        isAuthenticated: true
+                    });
+                    this.props.onLogin();
+                    history.push('/home')
                 } else {
                     //TODO:// render a login failed message here. Either way, error handling is good
                     console.log("bad login")
@@ -86,9 +91,16 @@ class Login extends React.Component<Props, State> {
             })
             .catch((error) => {
                 console.log("Yes, It broke!");
+                console.log(error);
+                this.setState({
+                    isAuthenticated: true
+                });
+                this.props.onLogin();
+                history.replace('/');
                 this.badLoginFeedbackCurrent = (<Form.Control.Feedback type="invalid" style = {this.formFeedbackStyle}>Incorrect username or password!</Form.Control.Feedback>);
             });
     }
+
 
     register(event : FormEvent) {
         event.preventDefault();
@@ -363,4 +375,20 @@ class Login extends React.Component<Props, State> {
     }
 }
 
-export default Login;
+interface RootState {
+    isAuthenticated : boolean
+  }
+  
+  const mapStateToProps = (state : RootState) => ({
+    isAuthenticated : state.isAuthenticated
+  });
+  
+  const mapDispatchToProps = (dispatch: Dispatch) => {
+    return {
+      onLogin: () => dispatch(login(true))
+    }
+  }
+  
+  const connector = connect(mapStateToProps, mapDispatchToProps);
+  
+  export default connector(Login);
