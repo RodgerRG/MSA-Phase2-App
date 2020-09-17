@@ -79,8 +79,8 @@ type State = RootState & {
     
 }
   
-const mapStateToProps = (state : RootState) => ({
-    userId : state.userId
+const mapStateToProps = (state : any) => ({
+    userId : state.idState.userId
 });
 
 const mapDispatchToProps = (dispatch : Dispatch) => {

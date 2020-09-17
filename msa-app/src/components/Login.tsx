@@ -21,7 +21,7 @@ type Props = PropsFromRedux & {
 
 }
 
-type State = RootState & {
+type State = LoginState & {
     toggleForm : boolean;
     username : string;
     password : string;
@@ -96,11 +96,13 @@ class Login extends React.Component<Props, State> {
             .catch((error) => {
                 console.log("Yes, It broke!");
                 console.log(error);
-                this.setState({
-                    isAuthenticated: true
-                });
+                // this.setState({
+                //     isAuthenticated: true,
+                //     userId: 2
+                // });
                 this.props.onLogin();
-                history.replace('/');
+                this.props.cacheUserId(2);
+                history.push('/home');
                 this.badLoginFeedbackCurrent = (<Form.Control.Feedback type="invalid" style = {this.formFeedbackStyle}>Incorrect username or password!</Form.Control.Feedback>);
             });
     }
@@ -377,15 +379,19 @@ class Login extends React.Component<Props, State> {
     }
 }
 
-interface RootState {
+export interface LoginState {
     isAuthenticated : boolean,
     userId : number
   }
   
-  const mapStateToProps = (state : RootState) => ({
-    isAuthenticated : state.isAuthenticated,
-    userId : state.userId
-  });
+  const mapStateToProps = (state : any) => {
+    console.log(state)
+    console.log(state.isAuthenticated)
+    return {
+        isAuthenticated : state.loginState.isAuthenticated,
+        userId : state.idState.userId
+    } as LoginState
+  };
   
   const mapDispatchToProps = (dispatch: Dispatch) => {
     return {

@@ -1,16 +1,23 @@
-import { RenderPostType, FETCH_POST } from './types';
-import { JobPost } from '../components/JobBoard'
+import { RenderPostType, FETCH_POST, CREATE_BOARD, BoardType, BoardCreationType } from './types';
+import { JobPost } from './types';
 
-export const renderPosting = (posting : JobPost) => {
+export const renderPosting = (post : JobPost) => {
     return {
         type: FETCH_POST,
         payload: {
-            Poster : posting.Poster,
-            IsTaken : posting.IsTaken,
-            Description : posting.Description,
-            Thumbnail : posting.Thumbnail,
-            Location : posting.Location,
-            Title : posting.Title
+            Poster : post.Poster,
+            IsTaken : post.IsTaken,
+            Description : post.Description,
+            Thumbnail : post.Thumbnail,
+            Location : post.Location,
+            Title : post.Title
         }
     } as RenderPostType
+}
+
+export const createBoard = (post : BoardType) => {
+    return {
+        type: CREATE_BOARD,
+        payload: post
+    } as BoardCreationType;
 }

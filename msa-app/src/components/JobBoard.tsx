@@ -8,6 +8,7 @@ import JobPosting from './JobPosting';
 import TopNav from './TopNav';
 import { Col } from 'react-bootstrap';
 import SideNav from './SideNav';
+import { JobPost } from '../actions/types';
 
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
@@ -19,15 +20,6 @@ type Props = PropsFromRedux & {
 type BoardReturn = {
     boardId : number,
     postings : JobPost[]
-}
-
-export type JobPost = {
-    Poster : string,
-    IsTaken : boolean,
-    Description : string,
-    Thumbnail : string,
-    Location : string,
-    Title : string
 }
 
 class Dashboard extends React.Component<Props, State> {

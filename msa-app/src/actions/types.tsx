@@ -34,3 +34,27 @@ interface IdUpdate {
 }
 
 export type CacheIdActionType = IdUpdate
+
+export type JobPost = {
+    Poster : string,
+    IsTaken : boolean,
+    Description : string,
+    Thumbnail : string,
+    Location : string,
+    Title : string
+}
+
+export type BoardType = {
+    boardId : number,
+    ownderId : number,
+    jobs : JobPost[]
+}
+
+export const CREATE_BOARD = "CREATE_BOARD"
+
+interface BoardCreation {
+    type: typeof CREATE_BOARD,
+    payload: BoardType
+}
+
+export type BoardCreationType = BoardCreation
