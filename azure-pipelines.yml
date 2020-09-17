@@ -8,7 +8,7 @@ trigger:
 
 variables:
   rootDir: 'msa-app'
-  buildDir: 'build'
+  buildDir: '$(rootDir)/build'
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -29,7 +29,7 @@ steps:
 - task: ArchiveFiles@2
   inputs:
     rootFolderOrFile: '$(buildDir)'
-    includeRootFolder: true
+    includeRootFolder: false
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     replaceExistingArchive: true
