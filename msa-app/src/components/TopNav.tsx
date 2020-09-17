@@ -7,6 +7,7 @@ import { renderPosting } from '../actions/postingActions';
 import {Row, Navbar, Nav} from 'react-bootstrap';
 import Switch from 'react-bootstrap/esm/Switch';
 import { Link } from 'react-router-dom';
+import logo from '../CustomLogo.png';
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -95,7 +96,7 @@ class App extends React.Component<Props, State> {
     return(
         <Navbar style = {baseStyle}>
             <Navbar.Brand>
-                <img src="https://cdn.auth0.com/blog/react-js/react.png" style={imageStyle}></img>
+                <img src={logo} style={imageStyle}></img>
             </Navbar.Brand>
             <Nav.Link style={rowStyle} onMouseEnter={this.hoverLightHome} onMouseLeave={this.hoverDarkHome}>
                 <Link to="/home" style={homeStyle}>Home</Link>

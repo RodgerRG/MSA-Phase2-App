@@ -57,6 +57,12 @@ const mapStateToProps = (state : any) => ({
   isAuthenticated : state.loginState.isAuthenticated
 });
 
-const connector = connect(mapStateToProps);
+const mapDispatchToProps = () => {
+  return {
+    
+  }
+}
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 export default connector(Home);

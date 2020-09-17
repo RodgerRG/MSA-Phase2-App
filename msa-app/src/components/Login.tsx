@@ -5,6 +5,7 @@ import {connect, ConnectedProps} from 'react-redux';
 import {login, updateID} from '../actions/loginActions';
 import { Dispatch } from 'redux';
 import history from './history';
+import logo from '../CustomLogo.png';
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -282,7 +283,7 @@ class Login extends React.Component<Props, State> {
             position: "relative",
             backgroundColor: "#2C3539"
         }}>
-            <img src="https://cdn.auth0.com/blog/react-js/react.png" style={{height: "80%", width: "80%", paddingLeft: "20%"}}></img>
+            <img src={logo} style={{height: "80%", width: "80%", paddingLeft: "20%"}}></img>
             <Form style={formstyle} noValidate onSubmit={this.login}>
             <Form.Group controlId="Username" style = {formGroupStyle}>
                 <Form.Label style = {formLabelStyle}>Username:</Form.Label>
