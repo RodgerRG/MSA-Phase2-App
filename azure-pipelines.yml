@@ -12,6 +12,7 @@
 trigger:
 - master
 - release
+
 variables:
   rootDir: 'msa-app'
   buildDir: '$(rootDir)/build'
