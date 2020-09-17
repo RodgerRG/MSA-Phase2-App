@@ -6,7 +6,7 @@ import { LoginState } from '../components/Login';
 
 const initialLogin = {
     isAuthenticated: false,
-    token : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyIiwidW5pcXVlX25hbWUiOiJSb2RnZXJSRyIsIm5iZiI6MTYwMDMzMTQwNCwiZXhwIjoxNjAwMzMzMjA0LCJpYXQiOjE2MDAzMzE0MDR9.NJZRO5pZdcQiXuAis5AYrJy2Lhb3eUOY5bWizqetYWE"
+    token : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyIiwidW5pcXVlX25hbWUiOiJSb2RnZXJSRyIsIm5iZiI6MTYwMDMzNjg2MywiZXhwIjoxNjAwMzM4NjYzLCJpYXQiOjE2MDAzMzY4NjN9.rm5n3nRl8v0TK3815oiV2IaQK3668LUgwOJ7fsS8pi0"
 };
 
 function loginReducer (state = initialLogin, action : LoginActionType) {

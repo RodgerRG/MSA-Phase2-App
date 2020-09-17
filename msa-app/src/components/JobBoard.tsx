@@ -4,7 +4,6 @@ import { Dispatch } from 'redux';
 import { HubConnectionBuilder, LogLevel, HubConnection} from '@microsoft/signalr';
 import { parentPort } from 'worker_threads';
 import { renderPosting } from '../actions/postingActions';
-import JobPosting from './JobPosting';
 import TopNav from './TopNav';
 import { Card, CardColumns, Col, Row } from 'react-bootstrap';
 import SideNav from './SideNav';
@@ -27,7 +26,8 @@ class Dashboard extends React.Component<Props, State> {
         super(props);
         this.state = {
             hubConnection : null,
-            board : props.board
+            board : props.board,
+            postings : []
         }
 
         this.createHubConnection = this.createHubConnection.bind(this);
@@ -54,7 +54,9 @@ class Dashboard extends React.Component<Props, State> {
                 if(response.status == 200) {
                     if(response.bodyUsed) {
                         var body : BoardReturn = await response.json();
-                        return body.postings.map(this.createPost);
+                        this.setState({ 
+                            postings : body.postings.map(this.createPost)
+                        });
                     }
                 } else {
                     
@@ -67,7 +69,20 @@ class Dashboard extends React.Component<Props, State> {
     }
 
     createPost(posting : JobPost) {
-        return (<JobPosting {...posting}/>);
+        var colour;
+        if(posting.IsTaken) {
+            colour = "success"
+        } else {
+            colour = "danger"
+        }
+        
+        return (<Card border={colour}>
+                    <Card.Body>
+                        <Card.Title>{posting.Title}</Card.Title>
+                        <Card.Subtitle>{posting.Poster}</Card.Subtitle>
+                        <Card.Body>{posting.Description}</Card.Body>
+                    </Card.Body>
+                </Card>);
     }
 
     async createHubConnection() {
@@ -113,7 +128,7 @@ class Dashboard extends React.Component<Props, State> {
                     </Col>
                     <Col xs={9} style={dashStyle}>
                         <CardColumns>
-                            
+                            {this.state.postings}
                         </CardColumns>
                     </Col>
                     </Row>
@@ -129,10 +144,11 @@ interface RootState {
 
 type State = RootState & {
     hubConnection : HubConnection | null,
+    postings : JSX.Element[]
 }
   
-const mapStateToProps = (state : RootState) => ({
-    board : state.board,
+const mapStateToProps = (state : any) => ({
+    board : state.postBoardState,
 });
 
 const mapDispatchToProps = (dispatch : Dispatch) => {

@@ -4,7 +4,6 @@ import { Dispatch } from 'redux';
 import { HubConnectionBuilder, LogLevel, HubConnection} from '@microsoft/signalr';
 import { parentPort } from 'worker_threads';
 import { renderPosting } from '../actions/postingActions';
-import JobPosting from './JobPosting';
 import {Row, Navbar, Nav} from 'react-bootstrap';
 import Switch from 'react-bootstrap/esm/Switch';
 import { Link } from 'react-router-dom';

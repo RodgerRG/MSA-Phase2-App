@@ -3,11 +3,11 @@ import Login from './Login';
 import { Provider, connect, useDispatch, ConnectedProps } from 'react-redux';
 import {Redirect, Router, Route, Switch} from 'react-router-dom';
 import { Store, AnyAction, createStore } from 'redux';
-import App from './App';
 import { LOGIN, SIGNUP_USER } from '../actions/types';
 import {login} from '../actions/loginActions';
 import history from './history';
 import Dashboard from './JobBoard';
+import App from './App';
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

@@ -3,7 +3,6 @@ import Login from './Login';
 import { Provider, connect, useDispatch, ConnectedProps } from 'react-redux';
 import {Redirect, Router, Route, Switch} from 'react-router-dom';
 import { Store, AnyAction, createStore, Dispatch } from 'redux';
-import App from './App';
 import { LOGIN, SIGNUP_USER } from '../actions/types';
 import {login} from '../actions/loginActions';
 import history from './history';

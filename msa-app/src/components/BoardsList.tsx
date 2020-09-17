@@ -4,7 +4,6 @@ import { Dispatch } from 'redux';
 import { HubConnectionBuilder, LogLevel, HubConnection} from '@microsoft/signalr';
 import { parentPort } from 'worker_threads';
 import { renderPosting } from '../actions/postingActions';
-import JobPosting from './JobPosting';
 import TopNav from './TopNav';
 import { Col, ListGroup, Row, Tab } from 'react-bootstrap';
 import { BoardListType, BoardType } from '../actions/types';
