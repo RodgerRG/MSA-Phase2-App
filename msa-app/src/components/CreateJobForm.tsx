@@ -4,11 +4,12 @@ import { Provider, connect, useDispatch, ConnectedProps } from 'react-redux';
 import {Redirect, Router, Route, Switch} from 'react-router-dom';
 import { Store, AnyAction, createStore, Dispatch } from 'redux';
 import App from './App';
-import { LOGIN, SIGNUP_USER } from '../actions/types';
+import { LOGIN, SIGNUP_USER, BoardType, JobPost } from '../actions/types';
 import {login} from '../actions/loginActions';
 import history from './history';
 import Dashboard from './JobBoard';
 import { Form, Button } from 'react-bootstrap';
+import { renderPosting } from '../actions/postingActions';
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -21,6 +22,7 @@ class CreateJobForm extends React.Component<Props, State> {
         super(props)
         this.state = {
             userId : props.userId,
+            board : props.board,
             title : "",
             description : ""
         };
@@ -32,6 +34,40 @@ class CreateJobForm extends React.Component<Props, State> {
 
     postJob(event : FormEvent) {
         event.preventDefault();
+
+        const jobRequestOptions = {
+            method: "POST",
+            mode: "cors",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({posterId : this.state.userId, boardId: this.props.board.boardId, description : this.state.description, title : this.state.title})
+        } as RequestInit;
+
+        console.log(jobRequestOptions.body);
+
+        fetch("https://phase2-api.azurewebsites.net/api/Jobs", jobRequestOptions)
+            .then(async response => {
+                if(response.status == 201) {
+                    var job : JobPost = await response.json();
+                    console.log(job);
+                    this.props.addJob(job);
+                    console.log(this.props.board);
+                } else {
+                    console.log("bad post")
+                }
+                
+            }).catch(error => {
+                this.props.addJob({
+                    Poster: "Rodger",
+                    IsTaken: false,
+                    Description: "sdfsadfds",
+                    Thumbnail: "",
+                    Location: "",
+                    Title: "sfsdaf"
+                })
+            });
     }
 
     titleChange(event : ChangeEvent<HTMLInputElement>) {
@@ -44,7 +80,7 @@ class CreateJobForm extends React.Component<Props, State> {
     descriptionChange(event : ChangeEvent<HTMLInputElement>) {
         event.preventDefault();
         this.setState({
-            title : event.currentTarget.value
+            description : event.currentTarget.value
         })
     }
 
@@ -103,7 +139,8 @@ class CreateJobForm extends React.Component<Props, State> {
 }
 
 interface RootState {
-    userId : number
+    userId : number,
+    board : BoardType
 }
 
 type State = RootState & {
@@ -111,13 +148,18 @@ type State = RootState & {
     description : string
 }
   
-const mapStateToProps = (state : any) => ({
-    userId : state.idState.userId
-});
+const mapStateToProps = (state : any) => {
+    console.log(state.postBoardState.board);
+    
+    return{
+        userId : state.idState.userId,
+        board : state.postBoardState.board
+    }
+};
 
 const mapDispatchToProps = (dispatch : Dispatch) => {
     return {
-        
+        addJob: (job : JobPost) => dispatch(renderPosting(job))
     }
 }
   

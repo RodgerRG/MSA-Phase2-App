@@ -53,8 +53,8 @@ interface RootState {
   isAuthenticated : boolean
 }
 
-const mapStateToProps = (state : RootState) => ({
-  isAuthenticated : state.isAuthenticated
+const mapStateToProps = (state : any) => ({
+  isAuthenticated : state.loginState.isAuthenticated
 });
 
 const connector = connect(mapStateToProps);

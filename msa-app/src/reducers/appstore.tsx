@@ -1,6 +1,6 @@
 import React from 'react';
 import Redux, { Action, combineReducers } from 'redux';
-import {LOGIN, LoginActionType, SIGNUP_USER, RenderPostType, FETCH_POST, CacheIdActionType, CACHE_ID, BoardCreationType, CREATE_BOARD} from '../actions/types';
+import {LOGIN, LoginActionType, SIGNUP_USER, RenderPostType, FETCH_POST, CacheIdActionType, CACHE_ID, BoardCreationType, CREATE_BOARD, BoardType} from '../actions/types';
 import { useHistory, useLocation } from 'react-router';
 import { LoginState } from '../components/Login';
 
@@ -22,27 +22,9 @@ function loginReducer (state = initialLogin, action : LoginActionType) {
     }
 }
 
-const initialPost = {
-    Poster : "",
-    IsTaken : false,
-    Description : "",
-    Thumbnail : "",
-    Location : "",
-    Title : ""
-};
-
-function postReducer (state = initialPost, action : RenderPostType) {
+function postReducer (state = initialBoardCreation, action : RenderPostType) {
     switch(action.type) {
-        case FETCH_POST:
-            let payload = action.payload;
-            return {
-                Poster : payload.Poster,
-                IsTaken : payload.IsTaken,
-                Description : payload.Description,
-                Thumbnail : payload.Thumbnail,
-                Location : payload.Location,
-                Title : payload.Title
-            }
+        
         default:
             return state
     }
@@ -66,7 +48,11 @@ function idReducer (state = initialId, action : CacheIdActionType){
 }
 
 const initialBoardCreation = {
-    board : null
+    board : {
+        boardId : 0,
+        ownerId : 0,
+        jobs : []
+    }
 };
 
 function postBoardReducer (state = initialBoardCreation, action : BoardCreationType) {
@@ -75,6 +61,14 @@ function postBoardReducer (state = initialBoardCreation, action : BoardCreationT
             return {
                 ...state,
                 board: action.payload
+            }
+        case FETCH_POST:
+            var board : BoardType = Object.assign({}, state.board, {
+                jobs: [...state.board.jobs, action.payload]
+            });
+            return {
+                ...state,
+                board : board
             }
         default :
             return state

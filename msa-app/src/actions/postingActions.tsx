@@ -11,7 +11,7 @@ export const renderPosting = (post : JobPost) => {
             Thumbnail : post.Thumbnail,
             Location : post.Location,
             Title : post.Title
-        }
+        } as JobPost
     } as RenderPostType
 }
 

@@ -46,15 +46,15 @@ export type JobPost = {
 
 export type BoardType = {
     boardId : number,
-    ownderId : number,
+    ownerId : number,
     jobs : JobPost[]
 }
 
 export const CREATE_BOARD = "CREATE_BOARD"
 
 interface BoardCreation {
-    type: typeof CREATE_BOARD,
-    payload: BoardType
+    type: typeof CREATE_BOARD | typeof FETCH_POST,
+    payload: BoardType | JobPost
 }
 
 export type BoardCreationType = BoardCreation

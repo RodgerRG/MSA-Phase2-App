@@ -81,6 +81,11 @@ class CreateBoardForm extends React.Component<Props, State> {
             }).catch(error => {
                 //do something.
                 this.feedback = this.badBoardCreation;
+                this.props.createBoard({
+                    boardId : 14,
+                    ownerId: 2,
+                    jobs: []
+                });
             });
     }
 
