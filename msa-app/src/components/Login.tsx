@@ -122,15 +122,12 @@ class Login extends React.Component<Props, State> {
 
         fetch("https://phase2-api.azurewebsites.net/api/User/signup", registerRequestOptions)
             .then(response => {
-                response.headers.forEach(element => {
-                    console.log(element);
-
+                console.log(response.status);
                     if(response.status == 201) {
                         this.toggleForm();
                     } else {
                         //TODO:// handle the error in here.
                     }
-                })
             })
             .catch((error : Error) => {
                 console.log(error);
