@@ -21,8 +21,8 @@ steps:
 
 - script: |
     cd $(rootDir)
-    npm install
     npm ci
+    npm run-scripts build
     cd ..
   displayName: 'npm install and build'
 
