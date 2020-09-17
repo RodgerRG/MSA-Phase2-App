@@ -16,13 +16,13 @@ pool:
 steps:
 - task: NodeTool@0
   inputs:
-    versionSpec: '10.x'
+    versionSpec: '12.x'
   displayName: 'Install Node.js'
 
 - script: |
     cd $(rootDir)
     npm install
-    npm build
+    npm run-script build
     cd ..
   displayName: 'npm install and build'
 
