@@ -44,7 +44,7 @@ class CreateJobForm extends React.Component<Props, State> {
                 "Authorization" : "Bearer " + this.props.token,
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({posterId : this.state.userId, boardId: this.props.board.boardId, description : this.state.description, title : this.state.title})
+            body: JSON.stringify({posterId : this.props.userId, boardId: this.props.board.boardId, description : this.state.description, title : this.state.title})
         } as RequestInit;
 
         console.log(jobRequestOptions.body);
@@ -55,7 +55,6 @@ class CreateJobForm extends React.Component<Props, State> {
                     var job : JobPost = await response.json();
                     console.log(job);
                     this.props.addJob(job);
-                    console.log(this.props.board);
                 } else {
                     console.log("bad post")
                 }
@@ -151,9 +150,8 @@ type State = RootState & {
     description : string
 }
   
-const mapStateToProps = (state : any) => {
-    console.log(state.postBoardState.board);
-    
+const mapStateToProps = (state : any) => { 
+    console.log(state);
     return{
         userId : state.idState.userId,
         board : state.postBoardState.board,

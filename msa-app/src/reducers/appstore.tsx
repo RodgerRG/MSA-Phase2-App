@@ -53,6 +53,7 @@ const initialBoardCreation = {
     board : {
         boardId : 0,
         ownerId : 0,
+        boardName: "",
         jobs : []
     }
 };
@@ -73,24 +74,16 @@ function BoardReducer (state = initialBoardCreation, action : BoardCreationType)
                 board : board
             }
         case GET_BOARD:
-            var res;
-            const getBoardOptions = {
-                method : "GET",
-                mode : "cors",
-                credentials : "same-origin",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-            } as RequestInit;
+            let newState = Object.assign({}, state.board, {
+                boardId: action.payload
+            });
 
-            fetch("https://phase2-api.azurewebsites.net/api/Boards/" + action.payload, getBoardOptions)
-                .then(async response => {
-                    res = await response.json();
-                }).catch(error => {
-                    console.log("bad board request")
-                });
+            console.log(newState);
 
-            return res;
+            return {
+                ...state,
+                board : newState
+            }
         default :
             return state
     }

@@ -3,11 +3,11 @@ import {connect, ConnectedProps} from 'react-redux';
 import { Dispatch } from 'redux';
 import { HubConnectionBuilder, LogLevel, HubConnection} from '@microsoft/signalr';
 import { parentPort } from 'worker_threads';
-import { renderPosting } from '../actions/postingActions';
+import { createBoard, renderPosting } from '../actions/postingActions';
 import TopNav from './TopNav';
 import { Card, CardColumns, Col, Row } from 'react-bootstrap';
 import SideNav from './SideNav';
-import { JobPost } from '../actions/types';
+import { BoardType, JobPost } from '../actions/types';
 
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
@@ -26,7 +26,9 @@ class Dashboard extends React.Component<Props, State> {
         super(props);
         this.state = {
             hubConnection : null,
-            board : props.board,
+            board : 0,
+            boardActual : props.boardActual,
+            token : "",
             postings : []
         }
 
@@ -38,26 +40,32 @@ class Dashboard extends React.Component<Props, State> {
       // this.createHubConnection();
     }
 
+    componentDidUpdate(prevProps : Props) {
+        console.log("a component updated")
+        if(prevProps.board != this.props.board || prevProps.boardActual != this.props.boardActual) {
+            console.log("creating new board")
+            this.createBoard();
+        }
+    }
+
     createBoard() {
         const boardRequestOptions = {
             method: "GET",
             mode: "cors",
             credentials: "same-origin",
             headers: {
-                "Content-Type" : "application/json"
-            },
-            body: JSON.stringify({boardID : this.state.board})
+                "Authorization" : "Bearer " + this.props.token
+            }
         } as RequestInit;
 
-        fetch("https://phase2-api.azurewebsites.net/api/Boards", boardRequestOptions)
+        fetch("https://phase2-api.azurewebsites.net/api/Boards/" + this.props.board, boardRequestOptions)
             .then(async response => {
                 if(response.status == 200) {
-                    if(response.bodyUsed) {
-                        var body : BoardReturn = await response.json();
-                        this.setState({ 
-                            postings : body.postings.map(this.createPost)
-                        });
-                    }
+                    var body = await response.json();
+                    console.log(body);
+                    this.setState({ 
+                        postings : body.jobs.map(this.createPost)
+                    });
                 } else {
                     
                     
@@ -68,19 +76,20 @@ class Dashboard extends React.Component<Props, State> {
             });
     }
 
-    createPost(posting : JobPost) {
+    createPost(posting : any) {
+        console.log(posting);
         var colour;
-        if(posting.IsTaken) {
+        if(posting.isTaken) {
             colour = "success"
         } else {
             colour = "danger"
         }
-        
-        return (<Card border={colour}>
+
+        return (<Card border={colour} key={posting.jobId}>
                     <Card.Body>
-                        <Card.Title>{posting.Title}</Card.Title>
-                        <Card.Subtitle>{posting.Poster}</Card.Subtitle>
-                        <Card.Body>{posting.Description}</Card.Body>
+                        <Card.Title>{posting.title}</Card.Title>
+                        <Card.Subtitle>{posting.poster}</Card.Subtitle>
+                        <Card.Body>{posting.description}</Card.Body>
                     </Card.Body>
                 </Card>);
     }
@@ -132,14 +141,15 @@ class Dashboard extends React.Component<Props, State> {
                         </CardColumns>
                     </Col>
                     </Row>
-                {this.createBoard}
             </div>
         );
     }
 }
 
 interface RootState {
+    token : string,
     board : number,
+    boardActual : BoardType
 }
 
 type State = RootState & {
@@ -147,13 +157,17 @@ type State = RootState & {
     postings : JSX.Element[]
 }
   
-const mapStateToProps = (state : any) => ({
-    board : state.postBoardState,
-});
+const mapStateToProps = (state : any) => {
+    return {
+        board : state.postBoardState.board.boardId,
+        boardActual : state.postBoardState.board,
+        token : state.loginState.token
+    }
+};
 
 const mapDispatchToProps = (dispatch : Dispatch) => {
     return {
-        renderPosting: (posting : JobPost) => dispatch(renderPosting(posting))
+        createBoard: (board : BoardType) => {dispatch(createBoard(board))}
     }
 }
   

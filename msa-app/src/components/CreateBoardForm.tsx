@@ -71,6 +71,8 @@ class CreateBoardForm extends React.Component<Props, State> {
             body: JSON.stringify({boardId : 0, boardName : this.state.boardName, ownerId : this.state.userId, jobs : []})
         } as RequestInit;
 
+        console.log(postBoardRequestOptions);
+
         fetch("https://phase2-api.azurewebsites.net/api/Boards", postBoardRequestOptions)
             .then(async response => {
                 if(response.status == 201) {
@@ -78,6 +80,7 @@ class CreateBoardForm extends React.Component<Props, State> {
                     this.props.createBoard(newBoard);
                 } else {
                     console.log("bad post");
+                    console.log(await response.json());
                     this.feedback = this.badBoardCreation;
                 }
             }).catch(error => {

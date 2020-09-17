@@ -8,6 +8,7 @@ import TopNav from './TopNav';
 import { Col, ListGroup, Row, Tab } from 'react-bootstrap';
 import { BoardListType, BoardType } from '../actions/types';
 import { JsxElement } from 'typescript';
+import { getBoard } from '../actions/getActions';
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -34,8 +35,10 @@ class BoardsList extends React.Component<Props, State> {
       this.populateBuildList();
   }
 
-  componentDidUpdate() {
-      this.populateBuildList();
+  componentDidUpdate(prevProps : Props) {
+      if(prevProps.board != this.props.board) {
+        this.populateBuildList();
+      }
   }
 
   populateBuildList() {
@@ -61,6 +64,7 @@ class BoardsList extends React.Component<Props, State> {
             }
         }).catch(error => {
             console.log("something broke")
+
         });
   }
 
@@ -77,7 +81,9 @@ class BoardsList extends React.Component<Props, State> {
   selectBoard(event : MouseEvent) {
     event.preventDefault();
 
-    
+    var int = event.currentTarget.attributes.getNamedItem('href')?.textContent as string;
+
+    this.props.getBoard(parseInt(int), this.props.token);
 
     console.log(event.currentTarget.attributes.getNamedItem('href')?.textContent);
     console.log(event.currentTarget.textContent);
@@ -111,7 +117,7 @@ const mapStateToProps = (state : any) => ({
 
 const mapDispatchToProps = (dispatch : Dispatch) => {
   return {
-    
+    getBoard: (boardId : number, auth : string) => dispatch(getBoard(boardId, auth))
   }
 }
 

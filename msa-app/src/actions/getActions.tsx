@@ -1,8 +1,9 @@
-import { GET_BOARD } from "./types"
+import { BoardCreationType, GET_BOARD } from "./types"
 
-export const getBoard = (boardId : number) => {
+export const getBoard = (boardId : number, auth: string) => {
     return {
         type : GET_BOARD,
-        payload : boardId
-    }
+        payload : boardId,
+        auth : auth
+    } as BoardCreationType;
 }

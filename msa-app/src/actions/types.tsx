@@ -55,7 +55,8 @@ export const CREATE_BOARD = "CREATE_BOARD"
 
 interface BoardCreation {
     type: typeof CREATE_BOARD | typeof FETCH_POST | typeof GET_BOARD,
-    payload: BoardType | JobPost | number
+    payload: BoardType | JobPost | number,
+    auth : string | null
 }
 
 export const GET_BOARD = "GET_BOARD"
