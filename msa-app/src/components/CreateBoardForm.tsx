@@ -118,13 +118,13 @@ class CreateBoardForm extends React.Component<Props, State> {
     
         const formLabelStyle = {
             fontSize: "2vh",
-            fontFamily : "Comic Sans MS",
+            fontFamily : "Arial",
         } as React.CSSProperties;
     
         const ButtonStyle = {
             width: "100%",
             fontSize: "1vw",
-            fontFamily: "Comic Sans MS"
+            fontFamily: "Arial"
         } as React.CSSProperties;
 
         const formRowStyle = {
