@@ -8,7 +8,7 @@ import TopNav from './TopNav';
 import { Button, Card, CardColumns, Col, Row } from 'react-bootstrap';
 import SideNav from './SideNav';
 import { BoardType, JobPost } from '../actions/types';
-
+import { FacebookShareButton, FacebookIcon } from 'react-share';
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -84,24 +84,53 @@ class Dashboard extends React.Component<Props, State> {
 
     createPost(posting : any) {
         console.log(posting);
+        console.log(posting.isTaken);
         var colour;
         var button;
+
+        const buttonElement = (<Button>Take Job</Button>)
+        const noMoreJobElement = (<footer>Job Taken!</footer>);
+
         if(posting.isTaken) {
-            colour = "danger"
-            button = (<footer>Job is already taken!</footer>)
+            colour = "danger";
+            button = noMoreJobElement;
         } else {
-            colour = "success"
-            button = (<Button onClick={this.removeJob}>Take Job</Button>)
+            colour = "success";
+            button = buttonElement;
         }
 
-        return (<Card border={colour} key={posting.jobId}>
+        const shareButton = (<FacebookShareButton
+            url={"https://phase2-app.azurewebsites.net/boards"}
+            quote={posting.title}
+            hashtag="#MSA-Phase2"
+            >
+                <FacebookIcon size={"5vh"} />
+        </FacebookShareButton>);
+
+        const facebookButtonStyle = {
+            right: "-10vw"
+        } as CSSProperties;
+
+        let element = (<Card border={colour} key={posting.jobId}>
                     <Card.Body>
                         <Card.Title>{posting.title}</Card.Title>
                         <Card.Subtitle>{posting.poster}</Card.Subtitle>
                         <Card.Text>{posting.description}</Card.Text>
-                        {button}
+                        <Row>
+                            <Col xs={4}>
+                                {button}
+                            </Col>
+                            <Col xs={4} style={facebookButtonStyle}>
+                                {shareButton}
+                            </Col>
+                        </Row>
+                        
                     </Card.Body>
                 </Card>);
+
+        console.log(element);
+
+        return element;
     }
 
     async createHubConnection() {
