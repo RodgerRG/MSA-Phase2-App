@@ -44,7 +44,7 @@ class SideNav extends React.Component<Props, State> {
 
         return(
             <div style={baseStyle}>
-            <Accordion defaultActiveKey="1">
+            <Accordion defaultActiveKey="2">
                 <Card>
                     <Accordion.Toggle eventKey = "0" as={Card.Header} style={accordionHeaderStyle}>
                         Boards
