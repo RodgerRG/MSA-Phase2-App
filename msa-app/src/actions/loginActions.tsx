@@ -1,9 +1,10 @@
 import {LOGIN, SIGNUP_USER, LoginActionType, CACHE_ID, CacheIdActionType} from './types';
 
-export const login = (flag : boolean) => {
+export const login = (flag : boolean, token : string) => {
     return {
         type : LOGIN,
-        payload: flag
+        payload: flag,
+        token: token
     } as LoginActionType
 }
 

@@ -24,7 +24,8 @@ class CreateBoardForm extends React.Component<Props, State> {
 
         this.state = {
             userId: this.props.userId,
-            boardName : ""
+            boardName : "",
+            token : ""
         }
 
         this.postBoard = this.postBoard.bind(this);
@@ -64,6 +65,7 @@ class CreateBoardForm extends React.Component<Props, State> {
             mode: "cors",
             credentials: "same-origin",
             headers: {
+                "Authorization": "Bearer " + this.props.token,
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({boardId : 0, boardName : this.state.boardName, ownerId : this.state.userId, jobs : []})
@@ -142,6 +144,7 @@ class CreateBoardForm extends React.Component<Props, State> {
 
 interface RootState {
     userId : number,
+    token : string
 }
 
 type State = RootState & {
@@ -150,7 +153,8 @@ type State = RootState & {
   
 const mapStateToProps = (state : any) => {
     return {
-        userId : state.idState.userId
+        userId : state.idState.userId,
+        token : state.loginState.token
     }
 };
 

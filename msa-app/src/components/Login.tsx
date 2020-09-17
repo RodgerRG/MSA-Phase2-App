@@ -79,13 +79,14 @@ class Login extends React.Component<Props, State> {
         fetch("https://phase2-api.azurewebsites.net/api/User/login", loginRequestOptions)
             .then(async response => {
                 if(response.status == 200) {
-                    var Id : string = await response.text();
+                    var body = await response.json();
+                    console.log(body);
                     this.setState({
                         isAuthenticated: true,
-                        userId: parseInt(Id)
+                        userId: parseInt(body.id)
                     });
-                    this.props.onLogin();
-                    this.props.cacheUserId(parseInt(Id));
+                    this.props.onLogin(body.token);
+                    this.props.cacheUserId(parseInt(body.id));
                     history.push('/home')
                 } else {
                     //TODO:// render a login failed message here. Either way, error handling is good
@@ -100,7 +101,7 @@ class Login extends React.Component<Props, State> {
                 //     isAuthenticated: true,
                 //     userId: 2
                 // });
-                this.props.onLogin();
+                this.props.onLogin("");
                 this.props.cacheUserId(2);
                 history.push('/home');
                 this.badLoginFeedbackCurrent = (<Form.Control.Feedback type="invalid" style = {this.formFeedbackStyle}>Incorrect username or password!</Form.Control.Feedback>);
@@ -395,7 +396,7 @@ export interface LoginState {
   
   const mapDispatchToProps = (dispatch: Dispatch) => {
     return {
-      onLogin: () => dispatch(login(true)),
+      onLogin: (token : string) => dispatch(login(true, token)),
       cacheUserId: (id : number) => dispatch(updateID(id))
     }
   }

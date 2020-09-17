@@ -11,6 +11,7 @@ import Dashboard from './JobBoard';
 import { Nav, Accordion, Card } from 'react-bootstrap';
 import CreateBoardForm from './CreateBoardForm';
 import CreateJobForm from './CreateJobForm';
+import BoardsList from './BoardsList';
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -27,7 +28,7 @@ class SideNav extends React.Component<Props, State> {
         const baseStyle = {
             position: 'relative',
             backgroundColor: '#2C3539',
-            height: '89.8vh'
+            height: '95.5vh'
         } as CSSProperties;
 
         const accordionHeaderStyle = {
@@ -35,6 +36,7 @@ class SideNav extends React.Component<Props, State> {
             alignContent : 'center',
             fontSize: '2.5vh',
             fontFamily: 'Comic Sans MS',
+            textAlign: 'center',
             color: '#2C3539'
         } as CSSProperties;
 
@@ -50,14 +52,7 @@ class SideNav extends React.Component<Props, State> {
                         Boards
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey = "0" style={accordionCollapseStyle}>
-                        <Card.Body>
-                            <Card.Title>
-                                Tester
-                            </Card.Title>
-                            <Card.Text>
-                                Lorem Ipsum Dolor Est.
-                            </Card.Text>
-                        </Card.Body>
+                        <BoardsList />
                     </Accordion.Collapse>
                 </Card>
                 <Card>

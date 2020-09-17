@@ -1,6 +1,7 @@
 export const LOGIN = "LOGIN"
 
 interface LoginUpdate {
+    token: string
     type: typeof LOGIN,
     payload: boolean
 }
@@ -53,8 +54,15 @@ export type BoardType = {
 export const CREATE_BOARD = "CREATE_BOARD"
 
 interface BoardCreation {
-    type: typeof CREATE_BOARD | typeof FETCH_POST,
-    payload: BoardType | JobPost
+    type: typeof CREATE_BOARD | typeof FETCH_POST | typeof GET_BOARD,
+    payload: BoardType | JobPost | number
 }
 
+export const GET_BOARD = "GET_BOARD"
+
 export type BoardCreationType = BoardCreation
+
+export type BoardListType = {
+    boardId : number,
+    boardName : string
+}

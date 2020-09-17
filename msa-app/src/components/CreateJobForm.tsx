@@ -23,6 +23,7 @@ class CreateJobForm extends React.Component<Props, State> {
         this.state = {
             userId : props.userId,
             board : props.board,
+            token : "",
             title : "",
             description : ""
         };
@@ -40,6 +41,7 @@ class CreateJobForm extends React.Component<Props, State> {
             mode: "cors",
             credentials: "same-origin",
             headers: {
+                "Authorization" : "Bearer " + this.props.token,
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({posterId : this.state.userId, boardId: this.props.board.boardId, description : this.state.description, title : this.state.title})
@@ -132,7 +134,7 @@ class CreateJobForm extends React.Component<Props, State> {
                     <Form.Control required as="textarea" style = {formControlStyle} placeholder="Description" value={this.state.description} onChange={this.descriptionChange}></Form.Control>
                 </Form.Group>
                 <Form.Row style = {formRowStyle}>
-                    <Button style={ButtonStyle} onClick={this.postJob}>Create New Board</Button>
+                    <Button style={ButtonStyle} onClick={this.postJob}>Post New Job</Button>
                 </Form.Row>
             </Form>);
     }
@@ -140,7 +142,8 @@ class CreateJobForm extends React.Component<Props, State> {
 
 interface RootState {
     userId : number,
-    board : BoardType
+    board : BoardType,
+    token : string
 }
 
 type State = RootState & {
@@ -153,7 +156,8 @@ const mapStateToProps = (state : any) => {
     
     return{
         userId : state.idState.userId,
-        board : state.postBoardState.board
+        board : state.postBoardState.board,
+        token : state.loginState.token
     }
 };
 

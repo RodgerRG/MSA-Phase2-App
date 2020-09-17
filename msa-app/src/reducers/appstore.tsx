@@ -1,11 +1,12 @@
 import React from 'react';
 import Redux, { Action, combineReducers } from 'redux';
-import {LOGIN, LoginActionType, SIGNUP_USER, RenderPostType, FETCH_POST, CacheIdActionType, CACHE_ID, BoardCreationType, CREATE_BOARD, BoardType} from '../actions/types';
+import {LOGIN, LoginActionType, SIGNUP_USER, RenderPostType, FETCH_POST, CacheIdActionType, CACHE_ID, BoardCreationType, CREATE_BOARD, BoardType, GET_BOARD} from '../actions/types';
 import { useHistory, useLocation } from 'react-router';
 import { LoginState } from '../components/Login';
 
 const initialLogin = {
-    isAuthenticated: false
+    isAuthenticated: false,
+    token : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyIiwidW5pcXVlX25hbWUiOiJSb2RnZXJSRyIsIm5iZiI6MTYwMDMzMTQwNCwiZXhwIjoxNjAwMzMzMjA0LCJpYXQiOjE2MDAzMzE0MDR9.NJZRO5pZdcQiXuAis5AYrJy2Lhb3eUOY5bWizqetYWE"
 };
 
 function loginReducer (state = initialLogin, action : LoginActionType) {
@@ -15,7 +16,8 @@ function loginReducer (state = initialLogin, action : LoginActionType) {
 
             return {
                 ...state,
-                isAuthenticated : action.payload
+                isAuthenticated : action.payload,
+                token: action.token
             }
         default: 
             return state
@@ -55,7 +57,7 @@ const initialBoardCreation = {
     }
 };
 
-function postBoardReducer (state = initialBoardCreation, action : BoardCreationType) {
+function BoardReducer (state = initialBoardCreation, action : BoardCreationType) {
     switch(action.type) {
         case CREATE_BOARD:
             return {
@@ -70,6 +72,25 @@ function postBoardReducer (state = initialBoardCreation, action : BoardCreationT
                 ...state,
                 board : board
             }
+        case GET_BOARD:
+            var res;
+            const getBoardOptions = {
+                method : "GET",
+                mode : "cors",
+                credentials : "same-origin",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            } as RequestInit;
+
+            fetch("https://phase2-api.azurewebsites.net/api/Boards/" + action.payload, getBoardOptions)
+                .then(async response => {
+                    res = await response.json();
+                }).catch(error => {
+                    console.log("bad board request")
+                });
+
+            return res;
         default :
             return state
     }
@@ -79,5 +100,5 @@ export default combineReducers({
     loginState : loginReducer,
     postState : postReducer,
     idState : idReducer,
-    postBoardState : postBoardReducer
+    postBoardState : BoardReducer
 })

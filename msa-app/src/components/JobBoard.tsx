@@ -6,7 +6,7 @@ import { parentPort } from 'worker_threads';
 import { renderPosting } from '../actions/postingActions';
 import JobPosting from './JobPosting';
 import TopNav from './TopNav';
-import { Col } from 'react-bootstrap';
+import { Card, CardColumns, Col, Row } from 'react-bootstrap';
 import SideNav from './SideNav';
 import { JobPost } from '../actions/types';
 
@@ -91,19 +91,32 @@ class Dashboard extends React.Component<Props, State> {
 
     render() {
         const baseStyle = {
-
         } as CSSProperties;
 
         const navStyle = {
-            left: '-0.8vw'
+        } as CSSProperties;
+
+        const rowStyle = {
+            left: '-0.5vw',
+            width: '100vw'
+        } as CSSProperties;
+
+        const dashStyle = {
         } as CSSProperties;
 
         return (
             <div style={baseStyle}>
                 <TopNav />
-                <Col xs={3} style={navStyle}>
-                    <SideNav/>
-                </Col>
+                    <Row style={rowStyle}>
+                    <Col xs={3} style={navStyle}>
+                        <SideNav/>
+                    </Col>
+                    <Col xs={9} style={dashStyle}>
+                        <CardColumns>
+                            
+                        </CardColumns>
+                    </Col>
+                    </Row>
                 {this.createBoard}
             </div>
         );

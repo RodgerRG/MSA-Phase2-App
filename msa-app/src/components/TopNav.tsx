@@ -62,22 +62,21 @@ class App extends React.Component<Props, State> {
   render() {
     const baseStyle = {
         backgroundColor: '#2C3539',
-        variant: 'dark'
+        variant: 'dark',
+        height: '4.5vh'
     } as CSSProperties;
 
     const rowStyle = {
         position: 'relative',
-        borderWidth: '0.1vw',
-        fontSize: '2vw',
+        fontSize: '1.5vh',
         fontFamily: 'Comic Sans MS',
         paddingRight: '1vw',
-        textDecoration: 'none'
+        textDecoration: 'none',
     } as CSSProperties;
 
     const imageStyle = {
-        height: '4vw',
-        width: '4vw',
-        padding: '1vh'
+        height: '4vh',
+        width: '4vh',
     } as CSSProperties;
 
     const homeStyle = {
