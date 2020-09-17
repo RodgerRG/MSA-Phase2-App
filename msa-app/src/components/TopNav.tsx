@@ -68,7 +68,7 @@ class App extends React.Component<Props, State> {
     const rowStyle = {
         position: 'relative',
         fontSize: '1.5vh',
-        fontFamily: 'Comic Sans MS',
+        fontFamily: 'Arial',
         paddingRight: '1vw',
         textDecoration: 'none',
     } as CSSProperties;

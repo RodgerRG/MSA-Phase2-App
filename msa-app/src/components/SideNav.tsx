@@ -34,7 +34,7 @@ class SideNav extends React.Component<Props, State> {
             backgroundColor : '#FF8552',
             alignContent : 'center',
             fontSize: '2.5vh',
-            fontFamily: 'Comic Sans MS',
+            fontFamily: 'Arial',
             textAlign: 'center',
             color: '#2C3539'
         } as CSSProperties;

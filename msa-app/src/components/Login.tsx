@@ -265,7 +265,7 @@ class Login extends React.Component<Props, State> {
         const ButtonStyle = {
             width: "70%",
             fontSize: "1vw",
-            fontFamily: "Comic Sans MS"
+            fontFamily: "Arial"
         } as React.CSSProperties;
     
         const formTextStyle = {

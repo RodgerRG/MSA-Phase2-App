@@ -1,11 +1,11 @@
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties, MouseEvent } from 'react';
 import {connect, ConnectedProps} from 'react-redux';
 import { Dispatch } from 'redux';
 import { HubConnectionBuilder, LogLevel, HubConnection} from '@microsoft/signalr';
 import { parentPort } from 'worker_threads';
 import { createBoard, renderPosting } from '../actions/postingActions';
 import TopNav from './TopNav';
-import { Card, CardColumns, Col, Row } from 'react-bootstrap';
+import { Button, Card, CardColumns, Col, Row } from 'react-bootstrap';
 import SideNav from './SideNav';
 import { BoardType, JobPost } from '../actions/types';
 
@@ -34,6 +34,7 @@ class Dashboard extends React.Component<Props, State> {
 
         this.createHubConnection = this.createHubConnection.bind(this);
         this.createBoard = this.createBoard.bind(this);
+        this.removeJob = this.removeJob.bind(this);
     }
 
     componentDidMount() {
@@ -76,20 +77,29 @@ class Dashboard extends React.Component<Props, State> {
             });
     }
 
+    removeJob(event : MouseEvent) {
+        event.preventDefault();
+        let jobId = event.currentTarget.attributes.getNamedItem('key')?.textContent; 
+    }
+
     createPost(posting : any) {
         console.log(posting);
         var colour;
+        var button;
         if(posting.isTaken) {
-            colour = "success"
-        } else {
             colour = "danger"
+            button = (<footer>Job is already taken!</footer>)
+        } else {
+            colour = "success"
+            button = (<Button onClick={this.removeJob}>Take Job</Button>)
         }
 
         return (<Card border={colour} key={posting.jobId}>
                     <Card.Body>
                         <Card.Title>{posting.title}</Card.Title>
                         <Card.Subtitle>{posting.poster}</Card.Subtitle>
-                        <Card.Body>{posting.description}</Card.Body>
+                        <Card.Text>{posting.description}</Card.Text>
+                        {button}
                     </Card.Body>
                 </Card>);
     }
