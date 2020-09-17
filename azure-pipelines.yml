@@ -22,7 +22,7 @@ steps:
 - script: |
     cd $(rootDir)
     npm install
-    npm react-scripts build
+    npm run-script build
     cd ..
   displayName: 'npm install and build'
 
