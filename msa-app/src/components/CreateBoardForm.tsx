@@ -1,14 +1,16 @@
-import React, { ReactPropTypes, Component, FormEvent } from 'react';
+import React, { ReactPropTypes, Component, FormEvent, ChangeEvent } from 'react';
 import Login from './Login';
 import { Provider, connect, useDispatch, ConnectedProps } from 'react-redux';
 import {Redirect, Router, Route, Switch} from 'react-router-dom';
 import { Store, AnyAction, createStore, Dispatch } from 'redux';
 import App from './App';
-import { LOGIN, SIGNUP_USER } from '../actions/types';
+import { LOGIN, SIGNUP_USER, BoardType } from '../actions/types';
 import {login} from '../actions/loginActions';
 import history from './history';
 import Dashboard from './JobBoard';
 import { Form, FormGroup, FormLabel, FormControl, Button } from 'react-bootstrap';
+import { propTypes } from 'react-bootstrap/esm/Image';
+import { createBoard } from '../actions/postingActions';
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -21,14 +23,41 @@ class CreateBoardForm extends React.Component<Props, State> {
         super(props)
 
         this.state = {
-            userId: this.props.userId
+            userId: this.props.userId,
+            boardName : ""
         }
 
         this.postBoard = this.postBoard.bind(this);
+        this.boardNameChange = this.boardNameChange.bind(this);
     }
+
+    formFeedbackStyle = {
+        position : "relative",
+        paddingTop: "0.1vh",
+        fontSize: "0.7vw"
+    } as React.CSSProperties;
+
+    feedback = (
+        <div>
+        </div>
+    );
+
+    boardNameChange(event : ChangeEvent<HTMLInputElement>) {
+        event.preventDefault();
+        this.setState ({
+            boardName : event.currentTarget.value
+        });
+    }
+
+    badBoardCreation = (
+        <Form.Control.Feedback style = {this.formFeedbackStyle}>
+            Failed to create board :'(
+        </Form.Control.Feedback>
+    )
 
     postBoard(event : FormEvent) {
         event.preventDefault();
+        this.feedback = (<div></div>);
 
         const postBoardRequestOptions = {
             method: "POST",
@@ -37,18 +66,21 @@ class CreateBoardForm extends React.Component<Props, State> {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({userId: this.state.userId})
+            body: JSON.stringify({boardId : 0, boardName : this.state.boardName, ownerId : this.state.userId, jobs : []})
         } as RequestInit;
 
-        fetch("https://phase2-api.azurewebsites.net/api/Boards/addBoard", postBoardRequestOptions)
+        fetch("https://phase2-api.azurewebsites.net/api/Boards", postBoardRequestOptions)
             .then(async response => {
-                if(response.status == 200) {
-
+                if(response.status == 201) {
+                    let newBoard : BoardType = await response.json();
+                    this.props.createBoard(newBoard);
                 } else {
                     console.log("bad post");
+                    this.feedback = this.badBoardCreation;
                 }
             }).catch(error => {
-
+                //do something.
+                this.feedback = this.badBoardCreation;
             });
     }
 
@@ -58,29 +90,25 @@ class CreateBoardForm extends React.Component<Props, State> {
             padding: "1vw",
             fontFamily: "Arial",
             alignContent: "center",
-            height: "8vh"
+            height: "18vh"
         } as React.CSSProperties;
-    
+
         const formGroupStyle = {
-            paddingLeft: "14%",
-            alignItems: "center",
             position: "relative",
+            color: '#2C3539',
+            textAlign: 'center',
+            alignItems: 'center'
         } as React.CSSProperties;
-    
-        const formLabelStyle = {
-            fontSize: "1vw",
-        } as React.CSSProperties;
-    
+
         const formControlStyle = {
-            width: "80%",
+            width: "100%",
             fontSize: "0.7vw",
             textAlign: "center"
         } as React.CSSProperties;
     
-        const formRowStyle = {
-            position: "relative",
-            paddingLeft: "22%",
-            paddingTop: "5%",
+        const formLabelStyle = {
+            fontSize: "2vh",
+            fontFamily : "Comic Sans MS",
         } as React.CSSProperties;
     
         const ButtonStyle = {
@@ -88,37 +116,42 @@ class CreateBoardForm extends React.Component<Props, State> {
             fontSize: "1vw",
             fontFamily: "Comic Sans MS"
         } as React.CSSProperties;
-    
-        const formTextStyle = {
+
+        const formRowStyle = {
             position: "relative",
-            paddingLeft: "22%",
-            fontSize: "0.7vw",
         } as React.CSSProperties;
 
         return(
             <Form style={formstyle}>
-                <FormGroup>
-                    <Button style={ButtonStyle} onClick={this.postBoard}>Create New Board</Button>
+                <FormGroup style = {formGroupStyle}>
+                    <Form.Label style= {formLabelStyle}>Board Name:</Form.Label>
+                    <Form.Control required style = {formControlStyle} type="name" placeholder="Board Name" value = {this.state.boardName} onChange={this.boardNameChange}></Form.Control>
                 </FormGroup>
+                <Form.Row style = {formRowStyle}>
+                    <Button style={ButtonStyle} onClick={this.postBoard}>Create New Board</Button>
+                    {this.feedback}
+                </Form.Row>
             </Form>);
     }
 }
 
 interface RootState {
-    userId : number
+    userId : number,
 }
 
 type State = RootState & {
-    
+    boardName : string
 }
   
-const mapStateToProps = (state : RootState) => ({
-    userId : state.userId
-});
+const mapStateToProps = (state : any) => {
+    return {
+        userId : state.idState.userId
+    }
+};
 
 const mapDispatchToProps = (dispatch : Dispatch) => {
     return {
-        
+        createBoard: (board : BoardType) => {dispatch(createBoard(board))}
     }
 }
   

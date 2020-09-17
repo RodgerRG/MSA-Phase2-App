@@ -37,7 +37,7 @@ class Home extends React.Component<Props, RootState> {
         ) : (
           <Redirect
             to={{
-              pathname: "/boards"
+              pathname: "/login"
             }}
           />
         )} />

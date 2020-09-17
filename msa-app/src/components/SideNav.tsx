@@ -10,6 +10,7 @@ import history from './history';
 import Dashboard from './JobBoard';
 import { Nav, Accordion, Card } from 'react-bootstrap';
 import CreateBoardForm from './CreateBoardForm';
+import CreateJobForm from './CreateJobForm';
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -72,14 +73,7 @@ class SideNav extends React.Component<Props, State> {
                         Create Job
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey = "2" style={accordionCollapseStyle}>
-                        <Card.Body>
-                            <Card.Title>
-                                Tester
-                            </Card.Title>
-                            <Card.Text>
-                                Lorem Ipsum Dolor Est.
-                            </Card.Text>
-                        </Card.Body>
+                        <CreateJobForm />
                     </Accordion.Collapse>
                 </Card>
             </Accordion>
